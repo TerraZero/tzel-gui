@@ -71,7 +71,6 @@ module.exports = class TemplateCommand extends Command.class {
         const file = this._data[mod][index];
         const name = this._newTplName(mTpls, file);
 
-        log(this.io().rel(file));
         this.io().fsCopy(this.io().rel(file), [boot.setting('path.tmp'), 'compile', name]);
       }
     }
