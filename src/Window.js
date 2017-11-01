@@ -8,9 +8,21 @@ let window = null;
 
 module.exports = class Window {
 
-  constructor(configs = {}) {
+  constructor(name, configs = {}) {
+    this._name = name;
     this._configs = configs;
     this._window = null;
+  }
+
+  /**
+   * @Inject('manager.event')
+   */
+  inject(em) {
+    this._em = em;
+  }
+
+  name() {
+    return this._name;
   }
 
   config(prop, value = null) {
@@ -39,19 +51,28 @@ module.exports = class Window {
     if (this._window === null) {
       app.on('ready', this.doOpen.bind(this));
     }
+    return this;
   }
 
   doOpen() {
     this._window = new BrowserWindow(this.configs());
+
+    this._em.fire('gui', 'window.open', {
+      window: this,
+    });
   }
 
   close() {
     app.on('ready', this.doClose.bind(this));
+    return this;
   }
 
   doClose() {
     this._window.close();
     this._window = null;
+    this._em.fire('gui', 'window.close', {
+      window: this,
+    });
   }
 
 }
