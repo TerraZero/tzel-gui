@@ -8,6 +8,10 @@ let window = null;
 
 module.exports = class Window {
 
+  static isGUISupport() {
+    return app !== undefined;
+  }
+
   constructor(name, configs = {}) {
     this._name = name;
     this._configs = configs;

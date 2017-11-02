@@ -18,7 +18,14 @@ module.exports = class TemplateManager {
 
       for (const index in mods) {
         if (mods[index].hasPath('templates')) {
-          this._data[mods[index].key()] = Glob.sync('**/*.pug', {
+          this._data[mods[index].key()] = {};
+
+          this._data[mods[index].key()].tpls = Glob.sync('**/*.tpl.pug', {
+            cwd: mods[index].path('templates'),
+            absolute: true,
+          });
+
+          this._data[mods[index].key()].mixins = Glob.sync('**/*.mixin.pug', {
             cwd: mods[index].path('templates'),
             absolute: true,
           });
