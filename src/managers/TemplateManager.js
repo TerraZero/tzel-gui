@@ -3,6 +3,7 @@
 const Glob = require('glob');
 
 const Path = use('core/Path');
+const Template = use('gui/Template');
 
 /**
  * @Service('manager.template')
@@ -10,12 +11,38 @@ const Path = use('core/Path');
 module.exports = class TemplateManager {
 
   constructor() {
-    this._data = null;
+    this._sources = null;
+    this._register = null;
   }
 
-  data() {
-    if (this._data === null) {
-      this._data = {};
+  register() {
+    if (this._register === null) {
+      this._register = {};
+    }
+    return this._register;
+  }
+
+  get(name) {
+    const register = this.register();
+
+    if (register[name] === undefined) {
+      register[name] = new Template(name);
+    }
+    return register[name];
+  }
+
+  reset(name = null) {
+    if (name === null) {
+      this._register = {};
+    } else {
+      delete this._register[name];
+    }
+    return this;
+  }
+
+  getSources(reset = false) {
+    if (this._sources === null || reset) {
+      this._sources = {};
       const mods = boot.getMods();
 
       for (const index in mods) {
@@ -23,19 +50,19 @@ module.exports = class TemplateManager {
           const key = mods[index].key();
           const path = mods[index].path('templates');
 
-          this._data[key] = {
+          this._sources[key] = {
             tpl: [],
             mixin: [],
           };
 
-          for (const type in this._data[key]) {
+          for (const type in this._sources[key]) {
             const files = Glob.sync('**/*.' + type + '.pug', {
               cwd: path,
               absolute: true,
             });
 
             for (const f in files) {
-              this._data[key][type].push({
+              this._sources[key][type].push({
                 file: files[f],
                 name: this.getTplName(path, files[f]),
               });
@@ -44,7 +71,7 @@ module.exports = class TemplateManager {
         }
       }
     }
-    return this._data;
+    return this._sources;
   }
 
   getTplName(path, file) {
