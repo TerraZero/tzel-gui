@@ -60,10 +60,6 @@ module.exports = class TemplateCommand extends Command.class {
 
   eClear() {
     this.io().h1('Clear templates');
-
-    const Template = use('gui/Template');
-    const s = new Template('cool.test');
-    log(s.render({ cool: 'super' }));
   }
 
   eLoad() {
