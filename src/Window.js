@@ -1,8 +1,11 @@
 'use strict';
 
 const electron = require('electron');
+const url = require('url');
 const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
+
+const Path = use('core/Path');
 
 let window = null;
 
@@ -47,6 +50,16 @@ module.exports = class Window {
     }
   }
 
+  load(path) {
+    path = Path.create(path);
+    this.window().loadURL(url.format({
+      pathname: path.norm(),
+      protocol: 'file:',
+      slashes: true
+    }));
+    return this;
+  }
+
   window() {
     return this._window;
   }
@@ -77,6 +90,14 @@ module.exports = class Window {
     this._em.fire('gui', 'window.close', {
       window: this,
     });
+  }
+
+  openTools() {
+    this.window().webContents.openDevTools();
+  }
+
+  static render() {
+    log('ok');
   }
 
 }

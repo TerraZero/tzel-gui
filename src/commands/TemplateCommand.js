@@ -105,18 +105,45 @@ module.exports = class TemplateCommand extends Command.class {
           mod: mod,
         });
 
+        const options = {
+          compile: 'js',
+        };
+
+        this._events.fire('gui', 'tpl.compile.alter', {
+          options: options,
+          includes: includes,
+          content: content,
+          source: source,
+          file: file,
+          mod: mod,
+        });
+
         if (includes.length()) {
           content = 'include ' + includes.items().join('.mixin.pug\ninclude ') + '.mixin.pug\n' + content;
         }
 
-        const compiled = pug.compileClient(content, {
-          filename: source.norm(),
-          name: 'template',
-        }) + '\nmodule.exports = template;\n';
+        let name = null;
+        switch (options.compile) {
+          case 'js':
+            const compiled = pug.compileClient(content, {
+              filename: source.norm(),
+              name: 'template',
+            }) + '\nmodule.exports = template;\n';
 
-        let name = file.name.substring(0, file.name.length - 3) + 'js';
+            name = file.name.substring(0, file.name.length - 3) + 'js';
 
-        this.io().fsWrite(target.join(name), compiled);
+            this.io().fsWrite(target.join(name), compiled);
+            break;
+          case 'html':
+            const compiledFunc = pug.compile(content, {
+              filename: source.norm(),
+            });
+
+            name = file.name.substring(0, file.name.length - 7) + 'html';
+
+            this.io().fsWrite(target.join(name), compiledFunc());
+            break;
+        }
       }
     }
   }
