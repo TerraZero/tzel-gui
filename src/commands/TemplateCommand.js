@@ -88,7 +88,6 @@ module.exports = class TemplateCommand extends Command.class {
   eCompile() {
     this.io().h1('Compile templates');
     const compile = this._manager.getCompileRoot();
-    const target = this._manager.getTemplateRoot();
 
     for (const mod in this._sources) {
       for (const index in this._sources[mod].tpl) {
@@ -109,13 +108,14 @@ module.exports = class TemplateCommand extends Command.class {
           compile: 'js',
         };
 
-        this._events.fire('gui', 'tpl.compile.alter', {
+        const event = this._events.fire('gui', 'tpl.compile.alter', {
           options: options,
           includes: includes,
           content: content,
           source: source,
           file: file,
           mod: mod,
+          target: this._manager.getTemplateRoot(),
         });
 
         if (includes.length()) {
@@ -123,6 +123,7 @@ module.exports = class TemplateCommand extends Command.class {
         }
 
         let name = null;
+        const target = event.get('target');
         switch (options.compile) {
           case 'js':
             const compiled = pug.compileClient(content, {

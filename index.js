@@ -9,6 +9,5 @@ module.exports = {
     src: 'src',
     templates: 'templates',
   },
-  run: require('./starter'),
 
 };
