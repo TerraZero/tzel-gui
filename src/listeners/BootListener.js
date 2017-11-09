@@ -1,5 +1,7 @@
 'use strict';
 
+const Window = use('gui/Window');
+
 module.exports = class BootListener {
 
   /**
@@ -15,7 +17,7 @@ module.exports = class BootListener {
    * @Listener('core.boot')
    */
   boot(event) {
-    const tpl = this._tpls.get('frame.screen');
+
   }
 
 }
