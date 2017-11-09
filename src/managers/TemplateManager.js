@@ -46,9 +46,9 @@ module.exports = class TemplateManager {
       const mods = boot.getMods();
 
       for (const index in mods) {
-        if (mods[index].hasPath('templates')) {
+        if (mods[index].hasPath('components')) {
           const key = mods[index].key();
-          const path = mods[index].path('templates');
+          const path = mods[index].path('components');
 
           this._sources[key] = {
             tpl: [],

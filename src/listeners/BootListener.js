@@ -1,16 +1,16 @@
 'use strict';
 
-const Window = use('gui/Window');
-
 module.exports = class BootListener {
 
   /**
    * @Inject('manager.template')
    * @Inject('gui')
+   * @Inject('window')
    */
-  inject(tpls, gui) {
+  inject(tpls, gui, window) {
     this._tpls = tpls;
     this._gui = gui;
+    this._window = window;
   }
 
   /**

@@ -7,7 +7,7 @@ module.exports = {
   root: __dirname,
   paths: {
     src: 'src',
-    templates: 'templates',
+    components: 'components',
   },
 
 };
