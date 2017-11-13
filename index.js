@@ -8,6 +8,8 @@ module.exports = {
   paths: {
     src: 'src',
     components: 'components',
+    templates: 'tpls',
+    template_root: 'tpl_root',
   },
 
 };

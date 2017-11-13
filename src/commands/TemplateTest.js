@@ -24,9 +24,8 @@ module.exports = class TemplateTest extends Command.class {
   }
 
   execute(argv) {
-    const tpl = this._manager.get('cool.test');
+    const tpl = this._manager.get('frame.screen');
 
-    tpl.set('cool', 'asdasdasdd');
     log(tpl.render());
   }
 
