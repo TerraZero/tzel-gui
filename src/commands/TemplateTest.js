@@ -1,7 +1,7 @@
 'use strict';
 
 const Command = use('cli/Command');
-const Template = use('gui/Template');
+const Textfield = use('gui/elements/Textfield');
 
 /**
  * @Command
@@ -24,9 +24,9 @@ module.exports = class TemplateTest extends Command.class {
   }
 
   execute(argv) {
-    const tpl = this._manager.get('frame.screen');
+    const t = new Textfield();
 
-    log(tpl.render());
+    log(t.render());
   }
 
 }
