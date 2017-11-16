@@ -48,7 +48,7 @@ module.exports = class Template {
   }
 
   render() {
-    return this.tpl()(this.args());
+    return this._manager.render(this);
   }
 
 }

@@ -4,6 +4,7 @@ const Glob = require('glob');
 
 const Path = use('core/Path');
 const Template = use('gui/Template');
+const RenderFunction = use('gui/annotations/RenderFunction');
 
 /**
  * @Service('manager.template')
@@ -13,6 +14,7 @@ module.exports = class TemplateManager {
   constructor() {
     this._sources = null;
     this._register = null;
+    this._renderFunctions = null;
   }
 
   register() {
@@ -20,6 +22,30 @@ module.exports = class TemplateManager {
       this._register = {};
     }
     return this._register;
+  }
+
+  getRenderFunctions() {
+    if (this._renderFunctions === null) {
+      this._renderFunctions = {};
+      const datas = boot.getDatas();
+
+      for (const index in datas) {
+        if (datas[index].hasTag(RenderFunction.name)) {
+          const annots = datas[index].getAnnotation(RenderFunction.name);
+          const subject = new (use(datas[index].use()))();
+
+          for (const a in annots) {
+            let name = annots[a].data.value;
+
+            if (name === null) {
+              name = annots[a].target;
+            }
+            this._renderFunctions[name] = subject[annots[a].target].bind(subject);
+          }
+        }
+      }
+    }
+    return this._renderFunctions;
   }
 
   get(name) {
@@ -87,6 +113,16 @@ module.exports = class TemplateManager {
 
   getTemplateRoot() {
     return Path.create([boot.setting('path.tpls')]);
+  }
+
+  render(template) {
+    const args = template.args();
+
+    args.info = args.info || {};
+    args.info.template = template;
+
+    args.sys = this.getRenderFunctions();
+    return template.tpl()(args);
   }
 
 }
