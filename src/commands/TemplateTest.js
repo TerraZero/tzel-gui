@@ -1,7 +1,7 @@
 'use strict';
 
 const Command = use('cli/Command');
-const Textfield = use('gui/elements/Textfield');
+const Textfield = use('gui/forms/Textfield');
 
 /**
  * @Command
@@ -24,9 +24,9 @@ module.exports = class TemplateTest extends Command.class {
   }
 
   execute(argv) {
-    const t = new Textfield();
+    const t = new Textfield('test');
 
-    log(t.render());
+    log(t.el('input'));
   }
 
 }

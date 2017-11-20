@@ -13,15 +13,7 @@ module.exports = class TemplateManager {
 
   constructor() {
     this._sources = null;
-    this._register = null;
     this._renderFunctions = null;
-  }
-
-  register() {
-    if (this._register === null) {
-      this._register = {};
-    }
-    return this._register;
   }
 
   getRenderFunctions() {
@@ -46,24 +38,6 @@ module.exports = class TemplateManager {
       }
     }
     return this._renderFunctions;
-  }
-
-  get(name) {
-    const register = this.register();
-
-    if (register[name] === undefined) {
-      register[name] = new Template(name);
-    }
-    return register[name];
-  }
-
-  reset(name = null) {
-    if (name === null) {
-      this._register = {};
-    } else {
-      delete this._register[name];
-    }
-    return this;
   }
 
   getSources(reset = false) {
@@ -118,10 +92,13 @@ module.exports = class TemplateManager {
   render(template) {
     const args = template.args();
 
-    args.info = args.info || {};
-    args.info.template = template;
+    if (!args.rendered) {
+      args.rendered = true;
+      args.info = args.info || {};
+      args.info.template = template;
 
-    args.sys = this.getRenderFunctions();
+      args.sys = this.getRenderFunctions();
+    }
     return template.tpl()(args);
   }
 

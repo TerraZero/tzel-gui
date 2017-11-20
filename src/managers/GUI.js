@@ -1,6 +1,6 @@
 'use strict';
 
-const $ = require('jquery');
+
 
 /**
  * @Service('gui')

@@ -1,4 +1,11 @@
 block wrapper
   .form-item
-    block input
-      input(type="text")
+    block label_wrapper
+      if label
+        label.form-item__label(for=id)
+          block label
+            | #{label}
+    block item_wrapper
+      .form-item__input
+        block input
+          input(type=type, id=id)
