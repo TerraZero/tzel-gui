@@ -7,6 +7,15 @@ module.exports = class Template {
     this._args = {};
     this._tpl = null;
     this._path = null;
+
+    const attr = {};
+    Object.defineProperty(attr, 'rm', {
+      value: function (name) {
+        delete this[name];
+        return this;
+      },
+    });
+    this.set('attr', attr);
   }
 
   /**
@@ -40,6 +49,15 @@ module.exports = class Template {
     return this;
   }
 
+  attr(prop, value = undefined) {
+    if (value === undefined) {
+      return this.get('attr')[prop];
+    } else {
+      this.get('attr')[prop] = value;
+      return this;
+    }
+  }
+
   tpl(reset = false) {
     if (this._tpl === null || reset) {
       this._tpl = require(this.path().norm());
@@ -47,7 +65,22 @@ module.exports = class Template {
     return this._tpl;
   }
 
-  render() {
+  mergeAttr(attr) {
+    const current = this.get('attr');
+
+    for (const i in attr) {
+      if (current[i] === undefined || !Array.isArray(current[i])) {
+        current[i] = attr[i];
+      } else {
+        for (const ia in attr) {
+          current[i].push(attr[ia]);
+        }
+      }
+    }
+  }
+
+  render(attr = null) {
+    this.mergeAttr(attr);
     return this._manager.render(this);
   }
 

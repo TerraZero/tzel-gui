@@ -15,13 +15,21 @@ module.exports = class Collection extends Element.class {
 
   args() {
     return [
-      'id',
+      'layout',
+      'items',
     ];
   }
 
   add(item) {
     this.getTemplate().get('items').push(item);
     return this;
+  }
+
+  attachHandle() {
+    for (const item of this.items()) {
+      item.attachHandle();
+    }
+    this.attach();
   }
 
 }

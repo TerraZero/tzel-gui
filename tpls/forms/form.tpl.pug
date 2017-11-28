@@ -1,0 +1,9 @@
+form&attributes(attr)(class=uuid)
+  if title
+    h2.form-title
+      | #{title}
+  .error-container
+  .items
+    +render(items)
+  .actions
+    +render(buttons)

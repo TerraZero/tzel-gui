@@ -4,28 +4,60 @@ const jq = require('jquery');
 
 const Template = use('gui/Template');
 
+const manager = use('manager.template');
+
+const elements = {};
+
 module.exports = class Element {
+
+  static get(uuid) {
+    return elements['uuid-' + uuid] || null;
+  }
 
   constructor() {
     this._tpl = null;
-    this._mapping = null;
     this._values = {};
     this._elements = {};
     this._item = null;
+    this._rendered = null;
+    this._id = null;
+
     this.init();
   }
 
   init() {
-    const mapping = this.mapping();
+    const mapping = this.args();
 
     for (const name of mapping) {
-      this[name] = (function (value = null) {
-        if (value === null) {
-          return this.that.get(this.name);
+      this[name] = (function (value = undefined) {
+        if (value === undefined) {
+          return this.that.getTemplate().get(this.name);
         } else {
-          return this.that.set(this.name, value);
+          this.that.getTemplate().set(this.name, value);
+          return this.that;
         }
       }).bind({ that: this, name: name });
+    }
+
+    const attrs = this.attrs();
+
+    for (const name in attrs) {
+      this[name] = (function (value = undefined) {
+        switch (this.type) {
+          case 'string':
+            return this.that.getTemplate().attr(this.name, value);
+          case 'array':
+            const array = this.that.getTemplate().attr(this.name) || [];
+
+            if (value === undefined) {
+              return array;
+            }
+            array.push(value);
+            this.that.getTemplate().attr(this.name, array);
+            return this.that;
+        }
+
+      }).bind({ that: this, name: name, type: attrs[name] });
     }
 
     const elements = this.elements();
@@ -37,13 +69,27 @@ module.exports = class Element {
         item: null,
       };
     }
+
+    const uuid = manager.getID('uuid');
+
+    elements[uuid] = this;
+    this.getTemplate().set('uuid', uuid);
+    this.getTemplate().attr('id', manager.getID(this.space()));
   }
 
-  mapping() {
-    if (this._mapping === null) {
-      this._mapping = this.args();
-    }
-    return this._mapping;
+  uuid() {
+    return this.getTemplate().get('uuid');
+  }
+
+  space() {
+    return 'element';
+  }
+
+  attrs() {
+    return {
+      id: 'string',
+      class: 'array',
+    };
   }
 
   args() {
@@ -60,25 +106,25 @@ module.exports = class Element {
 
   el(name) {
     if (this._elements[name].item === null) {
-      this._elements[name].item = jq(this._elements[name].selector, this.render());
+      this._elements[name].item = jq(this._elements[name].selector, this.item());
     }
     return this._elements[name].item;
   }
 
   set(name, prop) {
-    if (this.mapping().indexOf(name) === -1) {
-      this._values[name] = prop;
+    if (typeof this[name] === 'function') {
+      this[name](prop);
     } else {
-      this.getTemplate().set(name, prop);
+      this._values[name] = prop;
     }
     return this;
   }
 
   get(name) {
-    if (this.mapping().indexOf(name) === -1) {
-      return this._values[name];
+    if (typeof this[name] === 'function') {
+      return this[name]();
     } else {
-      return this.getTemplate().get(name);
+      return this._values[name];
     }
   }
 
@@ -89,14 +135,26 @@ module.exports = class Element {
     return this._tpl;
   }
 
-  render() {
+  item() {
     if (this._item === null) {
-      const string = this.getTemplate().render();
-
-      this._item = jq(string);
-      return string;
+      this._item = jq('.' + this.uuid());
     }
     return this._item;
+  }
+
+  render(reset = false) {
+    if (this._rendered === null || reset) {
+      this._rendered = this.getTemplate().render();
+    }
+    return this._rendered;
+  }
+
+  attachHandle() {
+    this.attach();
+  }
+
+  attach() {
+
   }
 
 }

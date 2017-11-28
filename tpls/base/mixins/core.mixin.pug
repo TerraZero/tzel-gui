@@ -1,2 +1,14 @@
 mixin render(data)
-  | !{sys.render(info, data)}
+  | !{sys.render(info, data, attributes)}
+
+mixin layout(layout, items)
+  +render({
+    tpl: 'layout.' + layout,
+    items: items,
+  })&attributes(attributes)
+
+mixin log(data)
+  - sys.log(data)
+
+mixin vue(field)
+  | {{ #{field} }}

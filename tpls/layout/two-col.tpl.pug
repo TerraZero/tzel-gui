@@ -1,0 +1,5 @@
+.layout.two-col&attributes(attr)
+  - for (i = 0; i < items.length; i += 2)
+    .col
+      +render(items[i])
+      +render(items[i + 1])

@@ -14,6 +14,7 @@ module.exports = class TemplateManager {
   constructor() {
     this._sources = null;
     this._renderFunctions = null;
+    this._ids = {};
   }
 
   getRenderFunctions() {
@@ -100,6 +101,14 @@ module.exports = class TemplateManager {
       args.sys = this.getRenderFunctions();
     }
     return template.tpl()(args);
+  }
+
+  getID(name = 'id') {
+    let number = this._ids[name] || 0;
+    const id = name + '-' + number++;
+
+    this._ids[name] = number;
+    return id;
   }
 
 }
