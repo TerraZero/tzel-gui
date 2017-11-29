@@ -91,16 +91,7 @@ module.exports = class TemplateManager {
   }
 
   render(template) {
-    const args = template.args();
-
-    if (!args.rendered) {
-      args.rendered = true;
-      args.info = args.info || {};
-      args.info.template = template;
-
-      args.sys = this.getRenderFunctions();
-    }
-    return template.tpl()(args);
+    return template.tpl()(template.args());
   }
 
   getID(name = 'id') {

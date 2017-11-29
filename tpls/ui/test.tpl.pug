@@ -1,0 +1,22 @@
+#test
+  .container
+    .left
+      h1 {{ entity.name }}
+      strong {{ entity.type }} / {{ entity.panzer }}
+      img(v-bind:src='entity.img', width='50', height='50')
+      .propertie(v-for='prop in entity.props')
+        h3 {{ prop.name }}
+        hr
+        ul
+          li(v-for='item in prop.items')
+            span.name {{ item.name }}
+            span.value {{ item.value }}
+    .right
+      h2 Eigenschaften
+      hr
+      ul
+        li(v-for='skill in entity.skills')
+          input.skill(v-model='skill.value')
+  button(v-on:click='toU1') To U1
+  button(v-on:click='toU2') To U2
+  button(v-on:click='data') Data
