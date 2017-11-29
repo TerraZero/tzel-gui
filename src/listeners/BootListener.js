@@ -23,7 +23,12 @@ module.exports = class BootListener {
   boot(event) {
     const t = new Template('ui.test');
 
-    this._gui.append('.boot.frame', t.render());
+    const Comp = Vue.extend({
+      props: ['entity'],
+      template: t.render(),
+    });
+
+    //this._gui.append('.boot.frame', t.render());
 
     class Unit1 extends Entity.class {
 
@@ -106,6 +111,34 @@ module.exports = class BootListener {
     const u1 = new Unit1();
     const u2 = new Unit2();
 
+    var vm = new Comp({
+
+      propsData: {
+        entity: u1.data(),
+      },
+
+      methods: {
+
+        toU1: function () {
+          this.entity = u1.data();
+        },
+
+        toU2: function () {
+          this.entity = u2.data();
+        },
+
+        data: function () {
+          console.log(this.entity);
+        },
+
+      },
+
+    });
+
+    //this._gui.append('.boot.frame', t.render());
+    vm.$mount('.boot.frame');
+
+    /*
     new Vue({
       el: '#test',
       data: {
@@ -127,6 +160,7 @@ module.exports = class BootListener {
 
       },
     });
+    */
 
     // this._window.setStatus('borderscreen');
   }
