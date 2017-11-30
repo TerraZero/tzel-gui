@@ -1,30 +1,50 @@
 'use strict';
 
-const Form = use('gui/inputs/Form');
-const Textfield = use('gui/inputs/Textfield');
-const Submit = use('gui/inputs/Submit');
+const Form = use('gui/forms/Form');
 
 module.exports = class LoginForm extends Form.class {
 
-  constructor() {
-    super('login-form');
+  tpl() {
+    return 'forms.login';
   }
 
-  form() {
-    this.title('Login Form');
-    this.add(new Textfield('user').label('User'));
-    this.add(new Textfield('pass').label('Password'));
-    this.addButton(new Submit('main', 'Login'));
+  fields() {
+    return [
+      {
+        name: 'User',
+        value: '',
+        key: 'user',
+      },
+      {
+        name: 'Password',
+        value: '',
+        key: 'pass',
+      },
+      {
+        key: 'col',
+        fields: [
+          {
+            name: 'First 1',
+            value: '',
+            key: 'first',
+          }
+        ],
+      }
+    ];
   }
 
-  validate() {
-    if (this.getInput('user') != 'hallo') {
-      this.setError('The user is wrong', 'user');
-    }
+  buttons() {
+    return [
+      {
+        name: 'Submit',
+        key: 'submit',
+        action: this.submit,
+      }
+    ];
   }
 
-  submit() {
-    log('submit');
+  submit(view, trigger) {
+    log(this.getValue('col'));
   }
 
 }

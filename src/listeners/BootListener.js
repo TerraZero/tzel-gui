@@ -1,8 +1,12 @@
 'use strict';
 
-const Vue = require('./../../node_modules/vue/dist/vue.min.js');
+const jq = require('jQuery');
+
 const Template = use('gui/Template');
 const Entity = use('gui/Entity');
+const View = use('gui/View');
+
+const LoginForm = use('gui/forms/LoginForm');
 
 module.exports = class BootListener {
 
@@ -21,15 +25,9 @@ module.exports = class BootListener {
    * @Listener('core.boot')
    */
   boot(event) {
-    const t = new Template('ui.test');
-
-    const Comp = Vue.extend({
-      props: ['entity'],
-      template: t.render(),
-    });
-
-    //this._gui.append('.boot.frame', t.render());
-
+    jq('.boot.frame').append('<div class="view-login-form"></div>');
+    new LoginForm().mount('.view-login-form');
+    return;
     class Unit1 extends Entity.class {
 
       init() {
@@ -65,6 +63,16 @@ module.exports = class BootListener {
         this._data.skills.push({ value: 'Gut gegen Unit 2' });
         this._data.skills.push({ value: 'Schlecht im Wald' });
         this._data.skills.push({ value: 'Kann schwimmen' });
+
+        this._data.actions = [];
+        this._data.actions.push({
+          name: 'First 1',
+          key: 'coo',
+        });
+        this._data.actions.push({
+          name: 'Second 1',
+          key: 'coo-2',
+        });
       }
 
     }
@@ -104,6 +112,16 @@ module.exports = class BootListener {
         this._data.skills.push({ value: 'Gut gegen Unit 1' });
         this._data.skills.push({ value: 'Gut in Gebirgen' });
         this._data.skills.push({ value: 'Kann nicht schwimmen' });
+
+        this._data.actions = [];
+        this._data.actions.push({
+          name: 'First 2',
+          key: 'cool',
+        });
+        this._data.actions.push({
+          name: 'Second 2',
+          key: 'cool-2',
+        });
       }
 
     }
@@ -111,58 +129,36 @@ module.exports = class BootListener {
     const u1 = new Unit1();
     const u2 = new Unit2();
 
-    var vm = new Comp({
+    class Test extends View.class {
 
-      propsData: {
-        entity: u1.data(),
-      },
+      tpl() {
+        return 'ui.test';
+      }
 
-      methods: {
+      data() {
+        return {
+          entity: u1.data(),
+        }
+      }
 
-        toU1: function () {
-          this.entity = u1.data();
-        },
+      methods() {
+        return {
 
-        toU2: function () {
-          this.entity = u2.data();
-        },
+          toU1: function () {
+            this.entity = u1.data();
+          },
 
-        data: function () {
-          console.log(this.entity);
-        },
+          toU2: function () {
+            this.entity = u2.data();
+          },
 
-      },
+        };
+      }
 
-    });
+    }
 
-    //this._gui.append('.boot.frame', t.render());
-    vm.$mount('.boot.frame');
-
-    /*
-    new Vue({
-      el: '#test',
-      data: {
-        entity: u1.data(),
-      },
-      methods: {
-
-        toU1: function () {
-          this.entity = u1.data();
-        },
-
-        toU2: function () {
-          this.entity = u2.data();
-        },
-
-        data: function () {
-          console.log(this.entity);
-        },
-
-      },
-    });
-    */
-
-    // this._window.setStatus('borderscreen');
+    //new Test().mount('.boot.frame');
+    use('window').setStatus('borderscreen');
   }
 
 }

@@ -1,9 +1,19 @@
-form&attributes(attr)(class=uuid)
-  if title
-    h2.form-title
-      | #{title}
-  .error-container
-  .items
-    +render(items)
-  .actions
-    +render(buttons)
+mixin form-fields(data = 'form.fields', iterator = 'field')
+  .field-wrapper(v-for=iterator + ' in ' + data)
+    .field(v-if=iterator + '.value !== undefined')
+      label(v-bind:for=iterator + '.key') {{ #{iterator}.name }}
+      input.field(v-bind:id=iterator + '.key', v-model=iterator + '.value')
+    if block
+      .fields(v-if=iterator + '.value === undefined')
+        block
+
+mixin form-actions(data = 'form.actions')
+  button(v-for='button in ' + data, v-on:click='action(button)') {{ button.name }}
+
+.form
+  .form-fields
+    block fields
+      +form-fields
+        +form-fields('field.fields', 'item')
+  .form-actions
+    +form-actions()
