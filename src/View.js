@@ -16,8 +16,11 @@ module.exports = class View {
 
   component() {
     if (this._component === null) {
+      const template = new Template(this.tpl()).setArgs(this.args());
+
+      this.createTemplate(template);
       const config = {
-        template: this.createTemplate(),
+        template: template.render(),
         data: this.createData.bind(this),
       };
 
@@ -62,8 +65,12 @@ module.exports = class View {
     return null;
   }
 
-  createTemplate() {
-    return new Template(this.tpl()).render();
+  args() {
+    return {};
+  }
+
+  createTemplate(template) {
+
   }
 
   data() {

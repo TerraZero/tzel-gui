@@ -8,6 +8,7 @@ module.exports = class Template {
     this._name = name;
     this._path = null;
     this._tpl = null;
+    this._args = {};
   }
 
   name() {
@@ -28,8 +29,19 @@ module.exports = class Template {
     return this._tpl;
   }
 
-  args() {
-    return {};
+  setArg(name, value) {
+    this._args[name] = value;
+    return this;
+  }
+
+  setArgs(args = {}) {
+    args.attrs = args.attrs || {};
+    this._args = args;
+    return this;
+  }
+
+  getArgs() {
+    return this._args;
   }
 
   render() {

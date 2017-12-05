@@ -91,7 +91,7 @@ module.exports = class TemplateManager {
   }
 
   render(template) {
-    return template.tpl()(template.args());
+    return template.tpl()(template.getArgs());
   }
 
   getID(name = 'id') {
