@@ -1,50 +1,58 @@
 'use strict';
 
 const Form = use('gui/forms/Form');
+const NextForm = use('gui/forms/NextForm');
 
 module.exports = class LoginForm extends Form.class {
 
-  tpl() {
-    return 'forms.login';
+  id() {
+    return 'form-login';
   }
 
   fields() {
     return [
+      this.createField('User', 'user'),
+      this.createField('Password', 'pass'),
+    ];
+  }
+
+  actions() {
+    return [
       {
-        name: 'User',
-        value: '',
-        key: 'user',
+        name: 'Submit',
+        key: 'submit',
+        validates: [
+          this.validate,
+        ],
+        submits: [
+          this.submit,
+        ],
       },
       {
-        name: 'Password',
-        value: '',
-        key: 'pass',
-      },
-      {
-        key: 'col',
-        fields: [
-          {
-            name: 'First 1',
-            value: '',
-            key: 'first',
-          }
+        name: 'Next',
+        key: 'next',
+        submits: [
+          this.next,
         ],
       }
     ];
   }
 
-  buttons() {
-    return [
-      {
-        name: 'Submit',
-        key: 'submit',
-        action: this.submit,
-      }
-    ];
+  validate(builder, view, action) {
+    if (this._thg === undefined) {
+      this.setError('user', 'ERROR: Test Error');
+      this._thg = true;
+    } else {
+      this._thg = undefined;
+    }
   }
 
-  submit(view, trigger) {
-    log(this.getValue('col'));
+  submit(builder, view, action) {
+    log('submit');
+  }
+
+  next(builder, view, action) {
+    builder.setForm(new NextForm());
   }
 
 }

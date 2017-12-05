@@ -7,6 +7,7 @@ const Entity = use('gui/Entity');
 const View = use('gui/View');
 
 const LoginForm = use('gui/forms/LoginForm');
+const FormBuilder = use('gui/forms/FormBuilder');
 
 module.exports = class BootListener {
 
@@ -26,7 +27,8 @@ module.exports = class BootListener {
    */
   boot(event) {
     jq('.boot.frame').append('<div class="view-login-form"></div>');
-    new LoginForm().mount('.view-login-form');
+
+    new FormBuilder().mount('.view-login-form').setForm(new LoginForm());
     return;
     class Unit1 extends Entity.class {
 

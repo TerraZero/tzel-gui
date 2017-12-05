@@ -1,41 +1,59 @@
 'use strict';
 
-const View = use('gui/View');
+module.exports = class Form {
 
-module.exports = class Form extends View.class {
-
-  createData() {
-    this._data.form = {
-      actions: this.buttons(),
-      fields: this.fields(),
-    };
-
-    return this._data;
+  constructor() {
+    this._fields = null;
+    this._actions = null;
+    this._errors = [];
   }
 
-  methods() {
-    const that = this;
-    return {
+  createField(name, key, classes = []) {
+    return { name, key, classes, value: '' };
+  }
 
-      action(button) {
-        that.action(this, button);
-      }
+  id() {
+    return null;
+  }
 
-    };
+  fields() {
+    return [];
+  }
+
+  actions() {
+    return [];
+  }
+
+  getFields() {
+    if (this._fields === null) {
+      this._fields = this.fields();
+    }
+    return this._fields;
+  }
+
+  getActions() {
+    if (this._actions === null) {
+      this._actions = this.actions();
+    }
+    return this._actions;
+  }
+
+  getErrors() {
+    return this._errors;
   }
 
   getField(field) {
-    let root = this._data.form;
+    let fields = this.getFields();
 
     for (const part of field.split('.')) {
-      for (const field of root.fields) {
+      for (const field of fields) {
         if (field.key === part) {
-          root = field;
+          fields = field;
           break;
         }
       }
     }
-    return root;
+    return fields;
   }
 
   getValue(field) {
@@ -58,17 +76,39 @@ module.exports = class Form extends View.class {
     return value;
   }
 
-  fields() {
-    return [];
+  resetErrors() {
+    for (const error of this.getErrors()) {
+      const field = this.getField(error.field);
+
+      field.classes.splice(field.classes.indexOf('error'), 1);
+    }
+    this.getErrors().splice(0, this.getErrors().length);
   }
 
-  buttons() {
-    return [];
+  hasError() {
+    return this.getErrors().length !== 0;
   }
 
-  action(view, trigger) {
-    if (typeof trigger.action === 'function') {
-      trigger.action.apply(this, [view, trigger]);
+  setError(field, message) {
+    this.getField(field).classes.push('error');
+    this.getErrors().push({ field, message });
+  }
+
+  handleSubmit(builder, view, action) {
+    this.resetErrors();
+
+    if (Array.isArray(action.validates)) {
+      for (const validate of action.validates) {
+        validate.call(this, builder, view, action);
+      }
+    }
+
+    if (!this.hasError()) {
+      if (Array.isArray(action.submits)) {
+        for (const submit of action.submits) {
+          submit.call(this, builder, view, action);
+        }
+      }
     }
   }
 
