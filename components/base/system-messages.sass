@@ -1,0 +1,24 @@
+#system-messages
+  position: absolute
+  top: 0
+  left: 30px
+  .message
+    width: 200px
+    padding: 5px
+    color: black
+    display: flex
+    justify-content: space-between
+    &.notice
+      border: 4px solid #18491B
+      background-color: #7EA581
+    &.warning
+      border: 4px solid #A9A50F
+      background-color: #FFFDA1
+    &.error
+      border: 4px solid #A0000C
+      background-color: #FB2535
+    .message-close
+      margin-left: 10px
+      display: none
+    &:hover .message-close
+      display: block

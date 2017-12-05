@@ -1,7 +1,6 @@
 'use strict';
 
 const View = use('gui/View');
-const Attrs = use('gui/Attrs');
 
 module.exports = class FormBuilder extends View.class {
 
@@ -20,26 +19,6 @@ module.exports = class FormBuilder extends View.class {
 
   tpl() {
     return 'forms.form';
-  }
-
-  args() {
-    return {
-      cool: 'hallo',
-    };
-  }
-
-  createTemplate(template) {
-    const attrs = new Attrs();
-
-    attrs
-      .addClass('hallo')
-      .addClass('cool')
-      .removeClass('hallo')
-      .removeClass('sdfhsjdf')
-      .attr('id', 'cool')
-      .attr('href', '#');
-
-    template.setArg('attrs', attrs.attrs());
   }
 
   localComponents() {

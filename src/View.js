@@ -8,6 +8,10 @@ const Template = use('gui/Template');
 
 module.exports = class View {
 
+  static vue() {
+    return Vue;
+  }
+
   constructor() {
     this._component = null;
     this._data = this.data();
@@ -83,6 +87,11 @@ module.exports = class View {
 
   computed() {
     return null;
+  }
+
+  tick(func) {
+    Vue.nextTick(func, this);
+    return this;
   }
 
 }
