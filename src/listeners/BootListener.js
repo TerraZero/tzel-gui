@@ -23,7 +23,7 @@ module.exports = class BootListener {
   }
 
   /**
-   * @Listener('core.boot')
+   * @Listener('core.boot.window')
    */
   boot(event) {
     jq('.boot.frame').append('<div class="mount-system-messages"></div>');
