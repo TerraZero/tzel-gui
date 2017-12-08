@@ -1,0 +1,49 @@
+// 3.1 User - Panel
+//
+// Markup: user-panel.pug
+//
+// Styleguide 3.1
+.frame
+  background: color(darkBack)
+  position: relative
+  > .top
+    position: absolute
+    top: 0
+    left: 0
+    right: 0
+    height: 50px
+    background: color(darkContent)
+    border-bottom: 2px solid black
+
+.user-panel
+  position: absolute
+  top: 0
+  right: 50px
+  width: 200px
+  height: 50px
+  background: black
+  .user
+    color: white
+    font-size: 15px
+    line-height: 50px
+  .image
+    padding: 10px
+    background: black
+    display: inline-flex
+    position: absolute
+    top: 0
+    right: 20px
+    > img
+      width: 50px
+      height: 50px
+      border: 2px solid orange
+  &:after
+    content: ''
+    width: 0
+    height: 0
+    position: absolute
+    top: 0
+    right: 100%
+    border-style: solid
+    border-width: 0 50px 50px 0
+    border-color: transparent black transparent transparent
