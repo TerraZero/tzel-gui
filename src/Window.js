@@ -127,7 +127,7 @@ module.exports = class Window {
     return this.getDisplay(index).bounds;
   }
 
-  openDevTool() {
+  openDevTools() {
     this.getWindow().webContents.openDevTools();
     return this;
   }

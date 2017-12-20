@@ -42,14 +42,23 @@ module.exports = class SystemFunctionListener {
     return this._systemFunctions;
   }
 
-  executeFor(key) {
+  executeFor(e, key) {
     const sf = this.getSystemFunctions();
 
     if (sf[key] !== undefined) {
       for (const item of sf[key]) {
         const subject = this._subject.get(item.use);
 
-        subject[item.annotation.target].call(subject, key, this._sys);
+        subject[item.annotation.target].call(subject, e, key, this._sys);
+        if (e.isPropagationStopped()) return;
+      }
+    }
+    if (sf[null] !== undefined) {
+      for (const item of sf[null]) {
+        const subject = this._subject.get(item.use);
+
+        subject[item.annotation.target].call(subject, e, key, this._sys);
+        if (e.isPropagationStopped()) return;
       }
     }
   }
@@ -59,7 +68,7 @@ module.exports = class SystemFunctionListener {
    */
   bootWindow() {
     jq('body').keydown((e) => {
-      this.executeFor(e.key);
+      this.executeFor(e, e.key);
     });
   }
 

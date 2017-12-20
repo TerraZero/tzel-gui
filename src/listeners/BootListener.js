@@ -26,65 +26,6 @@ module.exports = class BootListener {
    * @Listener('core.boot.window')
    */
   boot(event) {
-    jq('.boot.frame').append('<div class="mount-system-messages"></div>');
-    const sys = use('system.messages').mount('.mount-system-messages');
-    const window = this._window;
-
-    let action = null;
-
-    jq('body').keydown(function (e) {
-      let after = null;
-
-      if (action) {
-        e.stopPropagation();
-        e.preventDefault();
-
-        const status = window.getStatus();
-
-        switch (e.key) {
-          case 'd':
-            window.openDevTool();
-            sys.notice('Open: DevTool');
-            break;
-          case 'b':
-            if (status === 'borderscreen') {
-              sys.warning('Already in borderscreen');
-            } else {
-              window.setStatus('borderscreen');
-              sys.notice('window:borderscreen');
-            }
-            break;
-          case 'f':
-            if (status === 'fullscreen') {
-              sys.warning('Already in fullscreen');
-            } else {
-              window.setStatus('fullscreen');
-              sys.notice('window:fullscreen');
-            }
-            break;
-          case 'n':
-            if (status === 'normal') {
-              sys.warning('Already in normal');
-            } else {
-              window.setStatus('normal');
-              sys.notice('window:normal');
-            }
-            break;
-          default:
-            sys.error('Unknown action "' + e.key + '"');
-            break;
-        }
-      }
-      if (!action && e.ctrlKey && e.key == 'd') {
-        action = sys.notice('Action', 0);
-        return;
-      }
-      if (action) {
-        action = null;
-      }
-    });
-
-
     jq('.boot.frame').append('<div class="view-login-form"></div>');
 
     new FormBuilder().mount('.view-login-form').setForm(new LoginForm());

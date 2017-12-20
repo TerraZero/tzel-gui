@@ -2,6 +2,9 @@
 
 const View = use('gui/View');
 
+/**
+ * @Service('builder.form')
+ */
 module.exports = class FormBuilder extends View.class {
 
   constructor() {
