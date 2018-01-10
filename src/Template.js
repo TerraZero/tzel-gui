@@ -1,7 +1,5 @@
 'use strict';
 
-const manager = use('manager.template');
-
 module.exports = class Template {
 
   constructor(name) {
@@ -11,13 +9,20 @@ module.exports = class Template {
     this._args = {};
   }
 
+  /**
+   * @Inject('manager.template')
+   */
+  inject(manager) {
+    this._manager = manager;
+  }
+
   name() {
     return this._name;
   }
 
   path() {
     if (this._path === null) {
-      this._path = manager.getTemplateRoot().join(this.name() + '.tpl.js');
+      this._path = this._manager.getTemplateRoot().join(this.name() + '.tpl.js');
     }
     return this._path;
   }
@@ -45,7 +50,7 @@ module.exports = class Template {
   }
 
   render() {
-    return manager.render(this);
+    return this._manager.render(this);
   }
 
 }

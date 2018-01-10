@@ -1,15 +1,9 @@
 'use strict';
 
-const Subject = use('core/Subject');
-const SystemFunction = use('gui/annotations/SystemFunction');
+const Manifest = use('core/reflect/Manifest');
 const jq = require('jQuery');
 
 module.exports = class SystemFunctionListener {
-
-  constructor() {
-    this._systemFunctions = null;
-    this._subject = new Subject();
-  }
 
   /**
    * @Inject('system.messages')
@@ -18,49 +12,24 @@ module.exports = class SystemFunctionListener {
     this._sys = sys;
   }
 
-  getSystemFunctions() {
-    if (this._systemFunctions === null) {
-      this._systemFunctions = {};
-      const datas = boot.getDatas();
+  executeFor(e, key) {
+    const register = Manifest.getRegister('provider.system.functions');
 
-      for (const index in datas) {
-        if (datas[index].hasTag(SystemFunction.name)) {
-          const annots = datas[index].getAnnotation(SystemFunction.name);
-
-          for (const annot of annots) {
-            if (this._systemFunctions[annot.data.value] === undefined) {
-              this._systemFunctions[annot.data.value] = [];
-            }
-            this._systemFunctions[annot.data.value].push({
-              use: datas[index].use(),
-              annotation: annot,
-            });
-          }
-        }
-      }
+    if (this.executeList(e, key, register[key])) {
+      this.executeList(e, key, register[null]);
     }
-    return this._systemFunctions;
   }
 
-  executeFor(e, key) {
-    const sf = this.getSystemFunctions();
+  executeList(e, key, list) {
+    if (list === undefined) return true;
 
-    if (sf[key] !== undefined) {
-      for (const item of sf[key]) {
-        const subject = this._subject.get(item.use);
+    for (const item of list) {
+      const subject = Manifest.provide('system.functions', item.key);
 
-        subject[item.annotation.target].call(subject, e, key, this._sys);
-        if (e.isPropagationStopped()) return;
-      }
+      subject[item.target].call(subject, e, key, this._sys);
+      if (e.isPropagationStopped()) return false;
     }
-    if (sf[null] !== undefined) {
-      for (const item of sf[null]) {
-        const subject = this._subject.get(item.use);
-
-        subject[item.annotation.target].call(subject, e, key, this._sys);
-        if (e.isPropagationStopped()) return;
-      }
-    }
+    return true;
   }
 
   /**
