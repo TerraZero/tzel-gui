@@ -24,7 +24,7 @@ module.exports = class TemplateManager {
       const register = Manifest.getRegister('provider.render.functions', 'render.functions');
 
       for (const item of register) {
-        const object = Manifest.provide(null, item.key);
+        const object = use(item.key);
 
         for (const func of item.funcs) {
           this._renderFunctions[func.name] = object[func.target].bind(object);

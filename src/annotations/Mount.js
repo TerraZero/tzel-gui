@@ -10,7 +10,6 @@ module.exports = class Mount extends Annotation.class {
     return {
       value: null,
       screen: null,
-      service: null,
     };
   }
 

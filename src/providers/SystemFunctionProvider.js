@@ -12,6 +12,7 @@ module.exports = class SystemFunctionProvider extends Provider.class {
     const functions = manifest.getFromAnnotations(SystemFunction);
 
     if (functions.length) {
+      manifest.setProvide('object');
       for (const func of functions) {
         manifest.register(this, func.fields.value, {
           key: manifest.getKey(),

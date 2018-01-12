@@ -3,10 +3,10 @@
 const View = use('gui/View');
 
 /**
+ * @Service('system.messages')
  * @Mount(
  *   value='system-messages',
- *   screen='root',
- *   service='system.messages'
+ *   screen='root'
  * )
  */
 module.exports = class SystemMessageBuilder extends View.class {

@@ -24,7 +24,7 @@ module.exports = class SystemFunctionListener {
     if (list === undefined) return true;
 
     for (const item of list) {
-      const subject = Manifest.provide('system.functions', item.key);
+      const subject = use(item.key);
 
       subject[item.target].call(subject, e, key, this._sys);
       if (e.isPropagationStopped()) return false;

@@ -15,10 +15,8 @@ module.exports = class MountListener {
     const screen = jq('.boot');
 
     for (const mount of mounts) {
-      const m = Manifest.provide('mount', mount.service || mount.key);
-
       screen.append('<div class="mount-' + mount.value + '"></div>');
-      m.mount('.mount-' + mount.value);
+      use(mount.key).mount('.mount-' + mount.value);
     }
   }
 

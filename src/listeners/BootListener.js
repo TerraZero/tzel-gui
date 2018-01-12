@@ -28,7 +28,7 @@ module.exports = class BootListener {
   boot(event) {
     jq('.boot.frame').append('<div class="view-login-form"></div>');
 
-    new FormBuilder().mount('.view-login-form').setForm(new LoginForm());
+    FormBuilder.mount('.view-login-form').setForm(new LoginForm());
     return;
     class Unit1 extends Entity.class {
 

@@ -3,10 +3,10 @@
 const View = use('gui/View');
 
 /**
+ * @Service('system.music')
  * @Mount(
  *   value='system-music',
- *   screen='root',
- *   service='system.music'
+ *   screen='root'
  * )
  */
 module.exports = class MusicBuilder extends View.class {
