@@ -3,10 +3,10 @@
 const View = use('gui/View');
 
 /**
- * @Service('system.messages')
  * @Mount(
  *   value='system-messages',
- *   screen='root'
+ *   screen='root',
+ *   service='system.messages'
  * )
  */
 module.exports = class SystemMessageBuilder extends View.class {
@@ -15,17 +15,16 @@ module.exports = class SystemMessageBuilder extends View.class {
     super();
     this._id = 0;
     this._messages = [];
-    this._data = {
+  }
+
+  data() {
+    return {
       message: null,
     };
   }
 
   tpl() {
     return 'system.messages';
-  }
-
-  createData() {
-    return this._data;
   }
 
   create(message, type = 'notice', timeout = 2000) {

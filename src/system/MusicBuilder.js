@@ -3,17 +3,20 @@
 const View = use('gui/View');
 
 /**
- * @Service('system.music')
  * @Mount(
  *   value='system-music',
- *   screen='root'
+ *   screen='root',
+ *   service='system.music'
  * )
  */
 module.exports = class MusicBuilder extends View.class {
 
-  constructor() {
-    super();
-    this._data = {
+  tpl() {
+    return 'system.music';
+  }
+
+  data() {
+    return {
       state: {
         open: false,
         full: false,
@@ -21,14 +24,6 @@ module.exports = class MusicBuilder extends View.class {
       },
       video: 'https://www.youtube.com/embed/uQes2Bh9A3w',
     };
-  }
-
-  tpl() {
-    return 'system.music';
-  }
-
-  createData() {
-    return this._data;
   }
 
   toggleOpen() {
