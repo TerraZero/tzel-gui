@@ -1,0 +1,7 @@
+#system-messages(v-if='message')
+  transition(name='fade-slide', v-on:after-leave="clearMessage")
+    .message(v-if='message.show', v-bind:class='message.type')
+      .message-text
+        | {{ message.message }}
+      a.message-close(v-on:click="nextMessage")
+        | X

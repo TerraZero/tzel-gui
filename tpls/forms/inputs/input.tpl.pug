@@ -1,11 +1,11 @@
 block wrapper
-  .form-item
+  .form-item(class=uuid)
     block label_wrapper
       if label
-        label.form-item__label(for=id)
+        label.form-item__label(for=attr.id)
           block label
             | #{label}
     block item_wrapper
       .form-item__input
         block input
-          input(type=type, id=id)
+          input&attributes(attr)

@@ -4,6 +4,7 @@ const Glob = require('glob');
 
 const Path = use('core/Path');
 const Template = use('gui/Template');
+const Manifest = use('core/reflect/Manifest');
 const RenderFunction = use('gui/annotations/RenderFunction');
 
 /**
@@ -14,26 +15,19 @@ module.exports = class TemplateManager {
   constructor() {
     this._sources = null;
     this._renderFunctions = null;
+    this._ids = {};
   }
 
   getRenderFunctions() {
     if (this._renderFunctions === null) {
       this._renderFunctions = {};
-      const datas = boot.getDatas();
+      const register = Manifest.getRegister('provider.render.functions', 'render.functions');
 
-      for (const index in datas) {
-        if (datas[index].hasTag(RenderFunction.name)) {
-          const annots = datas[index].getAnnotation(RenderFunction.name);
-          const subject = new (use(datas[index].use()))();
+      for (const item of register) {
+        const object = use(item.key);
 
-          for (const a in annots) {
-            let name = annots[a].data.value;
-
-            if (name === null) {
-              name = annots[a].target;
-            }
-            this._renderFunctions[name] = subject[annots[a].target].bind(subject);
-          }
+        for (const func of item.funcs) {
+          this._renderFunctions[func.name] = object[func.target].bind(object);
         }
       }
     }
@@ -90,16 +84,15 @@ module.exports = class TemplateManager {
   }
 
   render(template) {
-    const args = template.args();
+    return template.tpl()(template.getArgs());
+  }
 
-    if (!args.rendered) {
-      args.rendered = true;
-      args.info = args.info || {};
-      args.info.template = template;
+  getID(name = 'id') {
+    let number = this._ids[name] || 0;
+    const id = name + '-' + number++;
 
-      args.sys = this.getRenderFunctions();
-    }
-    return template.tpl()(args);
+    this._ids[name] = number;
+    return id;
   }
 
 }

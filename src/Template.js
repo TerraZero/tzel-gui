@@ -4,9 +4,9 @@ module.exports = class Template {
 
   constructor(name) {
     this._name = name;
-    this._args = {};
-    this._tpl = null;
     this._path = null;
+    this._tpl = null;
+    this._args = {};
   }
 
   /**
@@ -27,24 +27,26 @@ module.exports = class Template {
     return this._path;
   }
 
-  args() {
-    return this._args;
-  }
-
-  get(prop) {
-    return this.args()[prop] || null;
-  }
-
-  set(prop, value) {
-    this.args()[prop] = value;
-    return this;
-  }
-
   tpl(reset = false) {
     if (this._tpl === null || reset) {
       this._tpl = require(this.path().norm());
     }
     return this._tpl;
+  }
+
+  setArg(name, value) {
+    this._args[name] = value;
+    return this;
+  }
+
+  setArgs(args = {}) {
+    args.attrs = args.attrs || {};
+    this._args = args;
+    return this;
+  }
+
+  getArgs() {
+    return this._args;
   }
 
   render() {

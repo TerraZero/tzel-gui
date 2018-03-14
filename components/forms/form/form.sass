@@ -1,0 +1,29 @@
+// 2.1 Forms - Form
+//
+// Markup: form.pug
+//
+// Styleguide 2.1
+.form
+  overflow: hidden
+
+.form-errors,
+.form-fields,
+.form-actions
+  display: flex
+  flex-wrap: wrap
+
+.field-wrapper
+  width: 50%
+  &.error
+    border: 1px solid red
+    box-sizing: border-box
+
+.form-errors
+  box-shadow: 0px 0px 8px 4px rgba(230, 108, 103, 0.25)
+  margin-bottom: 20px
+
+.form-error
+  background-color: red
+  padding: 5px
+  color: white
+  width: 100%

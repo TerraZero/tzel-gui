@@ -1,0 +1,5 @@
+.field-wrapper(v-bind:class='field.classes')
+  label(v-if='field.name', v-bind:for='field.key') {{ field.name }}
+  input.field(v-if='field.value !== undefined', v-bind:id='field.key', v-model='field.value')
+  form-field(v-bind:field='item', v-for='item in field.fields', v-if='field.fields !== undefined')
+

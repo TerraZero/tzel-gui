@@ -1,0 +1,14 @@
+.form(v-bind:id='form.id')
+  .form-content
+    block form
+      transition(name='fade-slide')
+        .form-errors(v-if='form.errors.length !== 0')
+          block errors
+            .form-error(v-for='error in form.errors')
+              .text {{ error.message }}
+      .form-fields
+        block fields
+          form-field(v-bind:field='field', v-for='field in form.fields')
+      .form-actions
+        block actions
+          a.button.action(href='#', v-for='action in form.actions', v-on:click.prevent='handleSubmit(action)') {{ action.name }}

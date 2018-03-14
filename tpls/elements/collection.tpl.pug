@@ -1,2 +1,5 @@
-div
-  +render(items)
+div.collection&attributes(attr)(class=uuid)
+  if layout
+    +layout(layout, items)
+  else
+    +render(items)

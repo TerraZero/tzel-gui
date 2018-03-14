@@ -1,0 +1,7 @@
+#system-music(v-bind:class='state', v-on:mouseover='openTeaser', v-on:mouseleave='closeTeaser')
+  a.trigger-open(href='#', v-on:click='toggleOpen') <
+  .video-wrapper
+    .video(v-if='video')
+      iframe(v-bind:src='video' frameborder='0')
+  .infos
+    a.more(href='#', v-on:click='toggleFull') V
